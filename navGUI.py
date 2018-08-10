@@ -72,7 +72,7 @@ class buildGUI():
                              textvariable=self.showSlaveVar)
         self.showSlaveEnt.grid(row=1, column=3)
 
-        # HUD for Movement?
+        # HUD for MoveTo
         self.chooseFrame = ttk.Frame(self.master)
         self.chooseFrame.pack(side=TOP)
 
@@ -93,6 +93,62 @@ class buildGUI():
 
         ttk.Button(self.chooseFrame, text='GO!',
                    command=lambda: self.moveTo()).grid(row=3, column=0, columnspan=2)
+
+        # Saved Positions
+        self.savedFrame = ttk.Frame(self.master)
+        self.savedFrame.pack(side=TOP)
+
+        # Saved Position1
+        ttk.Label(self.savedFrame, text='Position 1: ').grid(row=0, column=0)
+
+        self.choosePosY1 = DoubleVar()
+        self.choosePosY1Ent = ttk.Entry(self.savedFrame, textvariable=self.choosePosY1)
+        self.choosePosY1Ent.grid(row=0, column=1)
+
+        self.choosePosX1 = DoubleVar()
+        self.choosePosX1Ent = ttk.Entry(self.savedFrame, textvariable=self.choosePosX1)
+        self.choosePosX1Ent.grid(row=0, column=2)
+
+        ttk.Button(self.savedFrame, text='Save',
+                   command=lambda: self.savePos(0)).grid(row=0, column=3)
+
+        ttk.Button(self.savedFrame, text='GO!',
+                   command=lambda: self.moveToSet(0)).grid(row=0, column=4)
+
+        # Saved Position2
+        ttk.Label(self.savedFrame, text='Position 2: ').grid(row=1, column=0)
+
+        self.choosePosY2 = DoubleVar()
+        self.choosePosY2Ent = ttk.Entry(self.savedFrame, textvariable=self.choosePosY2)
+        self.choosePosY2Ent.grid(row=1, column=1)
+
+        self.choosePosX2 = DoubleVar()
+        self.choosePosX2Ent = ttk.Entry(self.savedFrame, textvariable=self.choosePosX2)
+        self.choosePosX2Ent.grid(row=1, column=2)
+
+        ttk.Button(self.savedFrame, text='Save',
+                   command=lambda: self.savePos(1)).grid(row=1, column=3)
+
+        ttk.Button(self.savedFrame, text='GO!',
+                   command=lambda: self.moveToSet(1)).grid(row=1, column=4)
+
+        # Saved Position3
+        ttk.Label(self.savedFrame, text='Position 3: ').grid(row=2, column=0)
+
+        self.choosePosY3 = DoubleVar()
+        self.choosePosY3Ent = ttk.Entry(self.savedFrame, textvariable=self.choosePosY3)
+        self.choosePosY3Ent.grid(row=2, column=1)
+
+        self.choosePosX3 = DoubleVar()
+        self.choosePosX3Ent = ttk.Entry(self.savedFrame, textvariable=self.choosePosX3)
+        self.choosePosX3Ent.grid(row=2, column=2)
+
+        ttk.Button(self.savedFrame, text='Save',
+                   command=lambda: self.savePos(2)).grid(row=2, column=3)
+
+        ttk.Button(self.savedFrame, text='GO!',
+                   command=lambda: self.moveToSet(2)).grid(row=2, column=4)
+
 
     def moveStep(self, n):
         moveDict = {0:('Left', -1),
@@ -119,6 +175,23 @@ class buildGUI():
     def moveTo(self):
         xPos = self.choosePosX.get()
         yPos = self.choosePosY.get()
+        try:
+            print('Moving to '+str(xPos)+' in x-axis')
+            print('Moving to '+str(yPos)+' in y-axis')
+        except:
+            print('Whoops, you\'ve gone too far again...')
+
+    def savePos(self, n):
+        entriesY = [self.choosePosY1, self.choosePosY2, self.choosePosY3]
+        entriesX = [self.choosePosX1, self.choosePosX2, self.choosePosX3]
+        entriesY[n].set('0.456')
+        entriesX[n].set('0.366')
+
+    def moveToSet(self, n):
+        entriesY = [self.choosePosY1, self.choosePosY2, self.choosePosY3]
+        entriesX = [self.choosePosX1, self.choosePosX2, self.choosePosX3]
+        yPos = entriesY[n].get()
+        xPos = entriesX[n].get()
         try:
             print('Moving to '+str(xPos)+' in x-axis')
             print('Moving to '+str(yPos)+' in y-axis')
