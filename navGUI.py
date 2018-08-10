@@ -7,10 +7,10 @@ class buildGUI():
 
         self._createGUI()
 
-        self.master.bind('<Left>', lambda e: self.left_move())
-        self.master.bind('<Right>', lambda e: self.right_move())
-        self.master.bind('<Up>', lambda e: self.up_move())
-        self.master.bind('<Down>', lambda e: self.down_move())
+        self.master.bind('<Left>', lambda e: self.moveStep(0))
+        self.master.bind('<Right>', lambda e: self.moveStep(1))
+        self.master.bind('<Up>', lambda e: self.moveStep(2))
+        self.master.bind('<Down>', lambda e: self.moveStep(3))
 
     def _createGUI(self):
 
@@ -43,13 +43,13 @@ class buildGUI():
         self.stepModd.grid(row=1, column=4)
 
         ttk.Button(self.navFrame, text='LEFT',
-                   command=lambda: self.move(0)).grid(row=1, column=0)
+                   command=lambda: self.moveStep(0)).grid(row=1, column=0)
         ttk.Button(self.navFrame, text='RIGHT',
-                   command=lambda: self.move(1)).grid(row=1, column=3)
-        ttk.Button(self.navFrame, text='Focus Away',
-                   command=lambda: self.move(2)).grid(row=0, column=2)
-        ttk.Button(self.navFrame, text='Focus To',
-                   command=lambda: self.move(3)).grid(row=2, column=2)
+                   command=lambda: self.moveStep(1)).grid(row=1, column=3)
+        ttk.Button(self.navFrame, text='UP',
+                   command=lambda: self.moveStep(2)).grid(row=0, column=2)
+        ttk.Button(self.navFrame, text='DOWN',
+                   command=lambda: self.moveStep(3)).grid(row=2, column=2)
 
 
         # Position frame
@@ -76,7 +76,25 @@ class buildGUI():
         self.chooseFrame = ttk.Frame(self.master)
         self.chooseFrame.pack(side=TOP)
 
-    def move(self, n):
+        ttk.Label(self.chooseFrame, text='Enter a position (mm): ',
+                   font=('Arial', 12)).grid(row=0, column=0, columnspan=2)
+        ttk.Label(self.chooseFrame, text='Up/Down: ').grid(row=1, column=0)
+        ttk.Label(self.chooseFrame, text='Lateral: ').grid(row=1, column=1)
+
+        self.choosePosY = DoubleVar()
+        self.choosePosY.set(2.5)
+        self.choosePosYEnt = ttk.Entry(self.chooseFrame, textvariable=self.choosePosY)
+        self.choosePosYEnt.grid(row=2, column=0)
+
+        self.choosePosX = DoubleVar()
+        self.choosePosX.set(2.5)
+        self.choosePosXEnt = ttk.Entry(self.chooseFrame, textvariable=self.choosePosX)
+        self.choosePosXEnt.grid(row=2, column=1)
+
+        ttk.Button(self.chooseFrame, text='GO!',
+                   command=lambda: self.moveTo()).grid(row=3, column=0, columnspan=2)
+
+    def moveStep(self, n):
         moveDict = {0:('Left', -1),
                     1: ('Right', 1),
                     2: ('Up', 1),
@@ -87,7 +105,25 @@ class buildGUI():
 
         direct = moveDict[n]
         stR = direct[0]
-        print(stR)
+
+        step = self.stepSize.get()
+        mod = modDict[self.stepMod.get()]
+
+        try:
+            print('Move '+stR)
+            print('by '+str(step*mod)+' mm')
+        except e:
+            print('You\'ve gone too far'
+                  ' this time.')
+
+    def moveTo(self):
+        xPos = self.choosePosX.get()
+        yPos = self.choosePosY.get()
+        try:
+            print('Moving to '+str(xPos)+' in x-axis')
+            print('Moving to '+str(yPos)+' in y-axis')
+        except:
+            print('Whoops, you\'ve gone too far again...')
 
 def main():
     root = Tk()
@@ -95,4 +131,4 @@ def main():
     root.mainloop()
 
 if __name__ == '__main__':
-main()
+    main()
